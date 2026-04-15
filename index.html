@@ -5,13 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>小手机 · 我的AI伙伴</title>
   <style>
-    /* ----- 全局样式 ----- */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, sans-serif;
       background: #1a1a1a;
@@ -20,7 +14,6 @@
       align-items: center;
       min-height: 100vh;
     }
-
     .phone-frame {
       width: 100%;
       max-width: 400px;
@@ -31,7 +24,6 @@
       box-shadow: 0 30px 60px rgba(0,0,0,0.7), 0 0 0 2px rgba(255,255,255,0.05);
       margin: 0 auto;
     }
-
     .screen {
       width: 100%;
       height: 100%;
@@ -42,8 +34,6 @@
       flex-direction: column;
       position: relative;
     }
-
-    /* ----- 页面视图 ----- */
     .view {
       flex: 1;
       overflow-y: auto;
@@ -51,99 +41,85 @@
       flex-direction: column;
       background: #f5f5f7;
     }
+    .view.active { display: flex; }
 
-    .view.active {
-      display: flex;
-    }
-
-    /* ----- 主屏幕样式 (开屏) ----- */
-    #homeView {
-      background: transparent;
-    }
-
+    /* ----- 主屏幕 (精致版) ----- */
+    #homeView { background: transparent; }
     .home-screen {
       display: flex;
       flex-direction: column;
       height: 100%;
-      background: url('https://images.pexels.com/photos/1287145/pexels-photo-1287145.jpeg?auto=compress&cs=tinysrgb&w=400') center/cover no-repeat;
+      background: linear-gradient(145deg, #2b2e3a 0%, #1a1c23 100%);
       position: relative;
+      overflow: hidden;
     }
-
     .home-screen::before {
       content: '';
       position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.15);
-      backdrop-filter: blur(1px);
-      -webkit-backdrop-filter: blur(1px);
+      top: -30%; left: -20%;
+      width: 140%; height: 140%;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.08) 0%, transparent 60%);
+      pointer-events: none;
     }
-
-    .home-status {
-      position: relative;
-      z-index: 2;
-      padding: 48px 24px 20px;
+    .home-status-bar {
+      position: relative; z-index: 5;
+      display: flex; justify-content: space-between;
+      padding: 16px 24px;
+      color: rgba(255,255,255,0.9);
+      font-size: 16px; font-weight: 500;
+    }
+    .home-clock {
+      position: relative; z-index: 5;
+      text-align: center; margin-top: 20px;
+    }
+    .home-time-large {
+      font-size: 72px; font-weight: 300;
       color: white;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.3);
-    }
-
-    .home-time {
-      font-size: 64px;
-      font-weight: 300;
+      text-shadow: 0 4px 20px rgba(0,0,0,0.3);
       letter-spacing: 2px;
     }
-
-    .home-date {
-      font-size: 18px;
-      margin-top: 4px;
-      opacity: 0.9;
+    .home-date-large {
+      font-size: 18px; color: rgba(255,255,255,0.8);
+      margin-top: 6px; font-weight: 400;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.2);
     }
-
-    .app-grid {
-      position: relative;
-      z-index: 2;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      padding: 40px 20px;
+    .home-app-grid {
+      position: relative; z-index: 5;
+      flex: 1; display: flex; flex-direction: column;
+      justify-content: center;
+      padding: 0 20px; margin-top: 20px;
     }
-
-    .app-row {
-      display: flex;
-      justify-content: space-around;
-      margin-bottom: 30px;
+    .home-app-row {
+      display: flex; justify-content: space-around;
+      margin-bottom: 32px;
     }
-
-    .app-icon {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-      background: rgba(255,255,255,0.2);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      padding: 16px 20px;
-      border-radius: 28px;
-      min-width: 80px;
-      border: 1px solid rgba(255,255,255,0.3);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-      cursor: pointer;
-      transition: transform 0.1s;
+    .home-app-icon {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 8px; cursor: pointer;
+      transition: transform 0.15s;
     }
-
-    .app-icon:active {
-      transform: scale(0.96);
+    .home-app-icon:active { transform: scale(0.94); }
+    .icon-bg {
+      width: 72px; height: 72px;
+      background: rgba(255,255,255,0.18);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 24px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 38px;
+      box-shadow: 0 12px 24px -8px rgba(0,0,0,0.3), inset 0 1px 2px rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.15);
     }
-
-    .app-icon span:first-child {
-      font-size: 32px;
+    .icon-label {
+      font-size: 14px; font-weight: 500;
+      color: rgba(255,255,255,0.95);
+      text-shadow: 0 2px 6px rgba(0,0,0,0.2);
     }
-
-    .app-icon span:last-child {
+    .home-footer {
+      position: relative; z-index: 5;
+      text-align: center; padding: 20px 0 30px;
+      color: rgba(255,255,255,0.5);
       font-size: 14px;
-      font-weight: 500;
-      color: white;
-      text-shadow: 0 1px 4px rgba(0,0,0,0.3);
     }
 
     /* ----- 状态栏 (各页面通用) ----- */
@@ -155,73 +131,60 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 16px;
-      font-weight: 600;
+      font-size: 16px; font-weight: 600;
       color: #1c1c1e;
       border-bottom: 1px solid rgba(0,0,0,0.05);
     }
+    .back-home-btn {
+      background: none; border: none;
+      font-size: 24px; cursor: pointer;
+      color: #007aff; padding: 0 8px;
+    }
+    .settings-btn {
+      background: none; border: none;
+      font-size: 22px; cursor: pointer;
+      color: #007aff;
+    }
 
-    /* ----- 聊天视图样式 ----- */
+    /* ----- 聊天视图 ----- */
     .chat-container {
-      flex: 1;
-      overflow-y: auto;
+      flex: 1; overflow-y: auto;
       padding: 16px 12px;
-      display: flex;
-      flex-direction: column;
+      display: flex; flex-direction: column;
       gap: 14px;
     }
-
-    .message {
-      display: flex;
-      max-width: 85%;
-    }
-
+    .message { display: flex; max-width: 85%; }
     .message.user { align-self: flex-end; }
     .message.assistant { align-self: flex-start; }
-
     .bubble {
-      padding: 12px 16px;
-      border-radius: 24px;
-      font-size: 15px;
-      line-height: 1.45;
+      padding: 12px 16px; border-radius: 24px;
+      font-size: 15px; line-height: 1.45;
       word-break: break-word;
       box-shadow: 0 2px 6px rgba(0,0,0,0.04);
     }
-
     .user .bubble {
-      background: #007aff;
-      color: white;
+      background: #007aff; color: white;
       border-bottom-right-radius: 8px;
     }
-
     .assistant .bubble {
-      background: white;
-      color: #1c1c1e;
+      background: white; color: #1c1c1e;
       border-bottom-left-radius: 8px;
       border: 1px solid #e4e7eb;
     }
-
     .sender-name {
-      font-size: 12px;
-      margin-bottom: 4px;
-      color: #6c757d;
-      font-weight: 500;
+      font-size: 12px; margin-bottom: 4px;
+      color: #6c757d; font-weight: 500;
     }
-
     .user .sender-name { text-align: right; margin-right: 4px; }
     .assistant .sender-name { margin-left: 4px; }
-
     .input-area {
       background: rgba(255,255,255,0.8);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       padding: 12px 16px;
       border-top: 1px solid rgba(0,0,0,0.05);
-      display: flex;
-      gap: 10px;
-      align-items: center;
+      display: flex; gap: 10px; align-items: center;
     }
-
     .input-area input {
       flex: 1;
       border: 1px solid rgba(0,0,0,0.1);
@@ -231,193 +194,63 @@
       background: rgba(255,255,255,0.6);
       outline: none;
     }
-
-    .input-area input:focus {
-      border-color: #007aff;
-      background: white;
-    }
-
+    .input-area input:focus { border-color: #007aff; background: white; }
     .input-area button {
-      background: #007aff;
-      border: none;
-      color: white;
-      width: 48px;
-      height: 48px;
-      border-radius: 30px;
-      font-size: 18px;
-      font-weight: 600;
-      cursor: pointer;
+      background: #007aff; border: none; color: white;
+      width: 48px; height: 48px; border-radius: 30px;
+      font-size: 18px; font-weight: 600; cursor: pointer;
       box-shadow: 0 4px 8px rgba(0,122,255,0.2);
     }
-
-    .settings-btn {
-      background: none;
-      border: none;
-      font-size: 22px;
-      cursor: pointer;
-      color: #007aff;
-    }
-
     .custom-panel {
-      background: white;
-      border-top: 1px solid #e9ecf0;
-      padding: 16px;
-      display: none;
-      flex-direction: column;
-      gap: 12px;
+      background: white; border-top: 1px solid #e9ecf0;
+      padding: 16px; display: none; flex-direction: column; gap: 12px;
     }
-
     .custom-panel.show { display: flex; }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .form-group label {
-      font-size: 13px;
-      font-weight: 600;
-      color: #3a3f47;
-    }
-
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group label { font-size: 13px; font-weight: 600; color: #3a3f47; }
     .form-group input, .form-group textarea {
-      padding: 10px 12px;
-      border: 1px solid #d1d5db;
-      border-radius: 14px;
-      font-size: 14px;
-      background: #f9fafb;
+      padding: 10px 12px; border: 1px solid #d1d5db;
+      border-radius: 14px; font-size: 14px; background: #f9fafb;
     }
-
-    .color-row {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-
     .save-btn {
-      background: #007aff;
-      color: white;
-      border: none;
-      padding: 12px;
-      border-radius: 30px;
-      font-weight: 600;
-      font-size: 16px;
-      margin-top: 6px;
-      cursor: pointer;
+      background: #007aff; color: white; border: none;
+      padding: 12px; border-radius: 30px;
+      font-weight: 600; font-size: 16px; cursor: pointer;
     }
-
-    /* ----- 底部导航 ----- */
-    .bottom-nav {
-      background: rgba(255,255,255,0.75);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      display: flex;
-      justify-content: space-around;
-      padding: 8px 16px 20px;
-      border-top: 1px solid rgba(0,0,0,0.05);
-    }
-
-    .nav-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      background: none;
-      border: none;
-      color: #8e8e93;
-      font-size: 12px;
-      font-weight: 500;
-      cursor: pointer;
-      padding: 6px 12px;
-      border-radius: 30px;
-    }
-
-    .nav-item.active {
-      color: #007aff;
-      background: rgba(0,122,255,0.1);
-    }
-
-    .nav-icon { font-size: 22px; }
 
     /* ----- 世界 & 我的 通用卡片 ----- */
     .feed, .profile-content { padding: 16px; }
-
     .card {
-      background: white;
-      border-radius: 24px;
-      padding: 20px;
-      margin-bottom: 16px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+      background: white; border-radius: 24px; padding: 20px;
+      margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.04);
     }
-
-    .card-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 12px;
-    }
-
+    .card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
     .avatar {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
+      width: 48px; height: 48px; border-radius: 50%;
       background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       font-size: 24px;
     }
-
     .user-info h4 { font-size: 16px; font-weight: 600; }
     .user-info p { font-size: 12px; color: #6c757d; }
-
-    .card-content p {
-      font-size: 15px;
-      line-height: 1.5;
-      color: #2c3e50;
-      margin-bottom: 16px;
-    }
-
+    .card-content p { font-size: 15px; line-height: 1.5; color: #2c3e50; margin-bottom: 16px; }
     .card-stats {
-      display: flex;
-      gap: 20px;
-      color: #6c757d;
-      font-size: 13px;
-      border-top: 1px solid #f0f0f0;
-      padding-top: 16px;
+      display: flex; gap: 20px; color: #6c757d;
+      font-size: 13px; border-top: 1px solid #f0f0f0; padding-top: 16px;
     }
-
-    .profile-header {
-      display: flex;
-      align-items: center;
-      gap: 24px;
-      margin-bottom: 24px;
-    }
-
+    .profile-header { display: flex; align-items: center; gap: 24px; margin-bottom: 24px; }
     .profile-avatar {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
+      width: 80px; height: 80px; border-radius: 50%;
       background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
-      font-size: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      font-size: 40px; display: flex; align-items: center; justify-content: center;
     }
-
     .profile-stats { display: flex; gap: 20px; }
     .stat-item { text-align: center; }
     .stat-num { font-size: 20px; font-weight: 700; }
-
     .menu-item {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      padding: 16px 0;
-      border-bottom: 1px solid #f0f0f0;
+      display: flex; align-items: center; gap: 16px;
+      padding: 16px 0; border-bottom: 1px solid #f0f0f0;
     }
-
     .menu-icon { width: 36px; text-align: center; font-size: 24px; }
   </style>
 </head>
@@ -425,41 +258,49 @@
 <div class="phone-frame">
   <div class="screen">
 
-    <!-- ====== 主屏幕视图 (开屏) ====== -->
+    <!-- 主屏幕 -->
     <div id="homeView" class="view active">
       <div class="home-screen">
-        <div class="home-status">
-          <div class="home-time" id="liveTime">--:--</div>
-          <div class="home-date" id="liveDate">----年--月--日</div>
+        <div class="home-status-bar">
+          <span id="homeTime">--:--</span>
+          <span>📶 🔋</span>
         </div>
-        <div class="app-grid">
-          <div class="app-row">
-            <div class="app-icon" data-open="chat">
-              <span>💬</span>
-              <span>聊天</span>
+        <div class="home-clock">
+          <div class="home-time-large" id="liveTimeLarge">--:--</div>
+          <div class="home-date-large" id="liveDateLarge">----年--月--日</div>
+        </div>
+        <div class="home-app-grid">
+          <div class="home-app-row">
+            <div class="home-app-icon" data-open="chat">
+              <div class="icon-bg">💬</div>
+              <span class="icon-label">聊天</span>
             </div>
-            <div class="app-icon" data-open="world">
-              <span>🌍</span>
-              <span>世界</span>
-            </div>
-          </div>
-          <div class="app-row">
-            <div class="app-icon" data-open="profile">
-              <span>👤</span>
-              <span>我的</span>
-            </div>
-            <div class="app-icon" data-open="settings">
-              <span>⚙️</span>
-              <span>设置</span>
+            <div class="home-app-icon" data-open="world">
+              <div class="icon-bg">🌍</div>
+              <span class="icon-label">世界</span>
             </div>
           </div>
+          <div class="home-app-row">
+            <div class="home-app-icon" data-open="profile">
+              <div class="icon-bg">👤</div>
+              <span class="icon-label">我的</span>
+            </div>
+            <div class="home-app-icon" data-open="settings">
+              <div class="icon-bg">⚙️</div>
+              <span class="icon-label">设置</span>
+            </div>
+          </div>
+        </div>
+        <div class="home-footer">
+          <span>✨ 小手机 · 你的AI伙伴</span>
         </div>
       </div>
     </div>
 
-    <!-- ====== 聊天视图 ====== -->
+    <!-- 聊天视图 -->
     <div id="chatView" class="view">
       <div class="status-bar">
+        <button class="back-home-btn">←</button>
         <span>💬 聊天</span>
         <button class="settings-btn" id="toggleSettingsBtn">⚙️</button>
       </div>
@@ -480,9 +321,10 @@
       </div>
     </div>
 
-    <!-- ====== 世界视图 ====== -->
+    <!-- 世界视图 -->
     <div id="worldView" class="view">
       <div class="status-bar">
+        <button class="back-home-btn">←</button>
         <span>🌍 世界</span>
         <span>🔔</span>
       </div>
@@ -511,9 +353,10 @@
       </div>
     </div>
 
-    <!-- ====== 我的视图 ====== -->
+    <!-- 我的视图 -->
     <div id="profileView" class="view">
       <div class="status-bar">
+        <button class="back-home-btn">←</button>
         <span>👤 我的</span>
         <span>⚙️</span>
       </div>
@@ -533,13 +376,6 @@
       </div>
     </div>
 
-    <!-- ====== 底部导航 ====== -->
-    <div class="bottom-nav">
-      <button class="nav-item" data-view="home"><span class="nav-icon">🏠</span>主页</button>
-      <button class="nav-item" data-view="chat"><span class="nav-icon">💬</span>聊天</button>
-      <button class="nav-item" data-view="world"><span class="nav-icon">🌍</span>世界</button>
-      <button class="nav-item" data-view="profile"><span class="nav-icon">👤</span>我的</button>
-    </div>
   </div>
 </div>
 
@@ -547,7 +383,7 @@
   (function(){
     'use strict';
 
-    // ---------- DOM 元素 ----------
+    // DOM 元素
     const views = {
       home: document.getElementById('homeView'),
       chat: document.getElementById('chatView'),
@@ -560,7 +396,6 @@
     const toggleSettingsBtn = document.getElementById('toggleSettingsBtn');
     const customPanel = document.getElementById('customPanel');
     const saveSettingsBtn = document.getElementById('saveSettingsBtn');
-
     const userNameInput = document.getElementById('userNameInput');
     const assistantNameInput = document.getElementById('assistantNameInput');
     const personalityInput = document.getElementById('personalityInput');
@@ -578,21 +413,19 @@
       assistantBubbleColor: '#ffffff'
     };
 
-    // ---------- 视图切换 ----------
+    // 视图切换
     function switchView(viewName) {
       Object.values(views).forEach(v => v.classList.remove('active'));
       if (views[viewName]) views[viewName].classList.add('active');
-      document.querySelectorAll('.nav-item').forEach(item => {
-        item.classList.remove('active');
-        if (item.dataset.view === viewName) item.classList.add('active');
-      });
     }
 
-    document.querySelectorAll('.nav-item').forEach(item => {
-      item.addEventListener('click', () => switchView(item.dataset.view));
+    // 返回主页
+    document.querySelectorAll('.back-home-btn').forEach(btn => {
+      btn.addEventListener('click', () => switchView('home'));
     });
 
-    document.querySelectorAll('.app-icon').forEach(icon => {
+    // 主屏幕图标
+    document.querySelectorAll('.home-app-icon').forEach(icon => {
       icon.addEventListener('click', () => {
         const target = icon.dataset.open;
         if (target === 'settings') {
@@ -604,27 +437,29 @@
       });
     });
 
-    // ---------- 主屏幕时钟 ----------
+    // 主屏幕时钟
     function updateHomeTime() {
-      const timeEl = document.getElementById('liveTime');
-      const dateEl = document.getElementById('liveDate');
-      if (!timeEl || !dateEl) return;
+      const timeSmall = document.getElementById('homeTime');
+      const timeLarge = document.getElementById('liveTimeLarge');
+      const dateLarge = document.getElementById('liveDateLarge');
       const now = new Date();
-      timeEl.textContent = now.toLocaleTimeString('zh-CN', { hour12: false, hour: '2-digit', minute: '2-digit' });
-      dateEl.textContent = now.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' });
+      const timeStr = now.toLocaleTimeString('zh-CN', { hour12: false, hour: '2-digit', minute: '2-digit' });
+      const dateStr = now.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' });
+      if (timeSmall) timeSmall.textContent = timeStr;
+      if (timeLarge) timeLarge.textContent = timeStr;
+      if (dateLarge) dateLarge.textContent = dateStr;
     }
     updateHomeTime();
     setInterval(updateHomeTime, 1000);
 
-    // ---------- 本地存储 ----------
+    // 本地存储
     function loadFromStorage() {
       try {
-        const savedSettings = localStorage.getItem('myAiPhone_settings');
-        if (savedSettings) settings = { ...settings, ...JSON.parse(savedSettings) };
-        const savedHistory = localStorage.getItem('myAiPhone_history');
-        if (savedHistory) chatHistory = JSON.parse(savedHistory);
-      } catch (e) {}
-      
+        const saved = localStorage.getItem('myAiPhone_settings');
+        if (saved) settings = { ...settings, ...JSON.parse(saved) };
+        const hist = localStorage.getItem('myAiPhone_history');
+        if (hist) chatHistory = JSON.parse(hist);
+      } catch(e){}
       userNameInput.value = settings.userName;
       assistantNameInput.value = settings.assistantName;
       personalityInput.value = settings.personality;
@@ -633,75 +468,62 @@
       assistantBubbleColorInput.value = settings.assistantBubbleColor;
       applyBubbleColors();
     }
-
-    function saveSettingsToStorage() {
+    function saveSettings() {
       localStorage.setItem('myAiPhone_settings', JSON.stringify(settings));
     }
-
-    function saveHistoryToStorage() {
+    function saveHistory() {
       localStorage.setItem('myAiPhone_history', JSON.stringify(chatHistory));
     }
-
     function applyBubbleColors() {
-      let styleTag = document.getElementById('dynamic-bubble-style');
-      if (!styleTag) {
-        styleTag = document.createElement('style');
-        styleTag.id = 'dynamic-bubble-style';
-        document.head.appendChild(styleTag);
+      let style = document.getElementById('dynamic-bubble-style');
+      if (!style) {
+        style = document.createElement('style');
+        style.id = 'dynamic-bubble-style';
+        document.head.appendChild(style);
       }
-      styleTag.textContent = `
+      style.textContent = `
         .message.user .bubble { background: ${settings.userBubbleColor} !important; }
         .message.assistant .bubble { background: ${settings.assistantBubbleColor} !important; }
       `;
     }
-
     function renderMessages() {
       chatContainer.innerHTML = '';
       if (chatHistory.length === 0) {
-        const welcomeDiv = document.createElement('div');
-        welcomeDiv.className = 'message assistant';
-        welcomeDiv.innerHTML = `
-          <div class="sender-name">${settings.assistantName}</div>
-          <div class="bubble">你好！我是你的AI伙伴。点击右上角⚙️先设置API Key，我就能陪你聊天啦～</div>
-        `;
-        chatContainer.appendChild(welcomeDiv);
+        const welcome = document.createElement('div');
+        welcome.className = 'message assistant';
+        welcome.innerHTML = `<div class="sender-name">${settings.assistantName}</div><div class="bubble">你好！我是你的AI伙伴。点击右上角⚙️先设置API Key，我就能陪你聊天啦～</div>`;
+        chatContainer.appendChild(welcome);
         return;
       }
       chatHistory.forEach(msg => {
-        const msgDiv = document.createElement('div');
-        msgDiv.className = `message ${msg.role}`;
-        const senderName = msg.role === 'user' ? settings.userName : settings.assistantName;
-        msgDiv.innerHTML = `
-          <div class="sender-name">${senderName}</div>
-          <div class="bubble">${escapeHtml(msg.content)}</div>
-        `;
-        chatContainer.appendChild(msgDiv);
+        const div = document.createElement('div');
+        div.className = `message ${msg.role}`;
+        const sender = msg.role === 'user' ? settings.userName : settings.assistantName;
+        div.innerHTML = `<div class="sender-name">${sender}</div><div class="bubble">${escapeHtml(msg.content)}</div>`;
+        chatContainer.appendChild(div);
       });
       chatContainer.scrollTop = chatContainer.scrollHeight;
     }
-
     function escapeHtml(text) {
       const div = document.createElement('div');
       div.textContent = text;
       return div.innerHTML;
     }
-
     function addMessage(role, content) {
       chatHistory.push({ role, content });
-      saveHistoryToStorage();
+      saveHistory();
       renderMessages();
     }
-
     async function callDeepSeekAPI(userMessage) {
       if (!settings.apiKey) {
-        return '❌ 请先在设置里填写你的 DeepSeek API Key。\n\n👉 去 platform.deepseek.com 免费注册获取。';
+        return '❌ 请先在设置里填写 DeepSeek API Key。\n\n👉 去 platform.deepseek.com 免费注册获取。';
       }
       const messages = [
         { role: 'system', content: settings.personality },
-        ...chatHistory.slice(-10),
+        ...chatHistory.slice(-10)
       ];
       try {
-        const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
+        const res = await fetch('https://api.deepseek.com/v1/chat/completions', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -714,15 +536,14 @@
             temperature: 0.8
           })
         });
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.error?.message || '请求失败');
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error?.message || '请求失败');
         return data.choices[0].message.content;
-      } catch (error) {
-        console.error(error);
+      } catch(e) {
+        console.error(e);
         return '😵 出错啦，可能是 API Key 无效或网络问题。';
       }
     }
-
     async function handleSendMessage() {
       const text = messageInput.value.trim();
       if (!text) return;
@@ -731,10 +552,10 @@
       sendBtn.disabled = true;
       const typingId = showTypingIndicator();
       try {
-        const aiReply = await callDeepSeekAPI(text);
+        const reply = await callDeepSeekAPI(text);
         removeTypingIndicator(typingId);
-        addMessage('assistant', aiReply);
-      } catch (e) {
+        addMessage('assistant', reply);
+      } catch(e) {
         removeTypingIndicator(typingId);
         addMessage('assistant', '出错啦，稍后再试～');
       } finally {
@@ -742,26 +563,20 @@
         messageInput.focus();
       }
     }
-
     function showTypingIndicator() {
       const id = 'typing-' + Date.now();
-      const typingDiv = document.createElement('div');
-      typingDiv.id = id;
-      typingDiv.className = 'message assistant';
-      typingDiv.innerHTML = `
-        <div class="sender-name">${settings.assistantName}</div>
-        <div class="bubble" style="background: ${settings.assistantBubbleColor};">✏️ 正在输入...</div>
-      `;
-      chatContainer.appendChild(typingDiv);
+      const div = document.createElement('div');
+      div.id = id;
+      div.className = 'message assistant';
+      div.innerHTML = `<div class="sender-name">${settings.assistantName}</div><div class="bubble" style="background: ${settings.assistantBubbleColor};">✏️ 正在输入...</div>`;
+      chatContainer.appendChild(div);
       chatContainer.scrollTop = chatContainer.scrollHeight;
       return id;
     }
-
     function removeTypingIndicator(id) {
       const el = document.getElementById(id);
       if (el) el.remove();
     }
-
     function applySettings() {
       settings.userName = userNameInput.value.trim() || '我';
       settings.assistantName = assistantNameInput.value.trim() || 'AI';
@@ -769,7 +584,7 @@
       settings.apiKey = apiKeyInput.value.trim();
       settings.userBubbleColor = userBubbleColorInput.value;
       settings.assistantBubbleColor = assistantBubbleColorInput.value;
-      saveSettingsToStorage();
+      saveSettings();
       applyBubbleColors();
       renderMessages();
       customPanel.classList.remove('show');
@@ -777,16 +592,11 @@
 
     // 事件绑定
     sendBtn.addEventListener('click', handleSendMessage);
-    messageInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        handleSendMessage();
-      }
-    });
+    messageInput.addEventListener('keypress', e => { if(e.key==='Enter'){ e.preventDefault(); handleSendMessage(); }});
     toggleSettingsBtn.addEventListener('click', () => customPanel.classList.toggle('show'));
     saveSettingsBtn.addEventListener('click', applySettings);
 
-    // 初始化
+    // 启动
     loadFromStorage();
     renderMessages();
     applyBubbleColors();
