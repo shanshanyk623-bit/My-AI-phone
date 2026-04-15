@@ -5,12 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>我的小手机</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, sans-serif;
       background: #1a1a1a;
@@ -19,8 +14,6 @@
       align-items: center;
       min-height: 100vh;
     }
-
-    /* 手机外壳 */
     .phone-frame {
       width: 100%;
       max-width: 400px;
@@ -31,8 +24,6 @@
       box-shadow: 0 30px 60px rgba(0,0,0,0.6);
       margin: 0 auto;
     }
-
-    /* 屏幕内容 */
     .screen {
       width: 100%;
       height: 100%;
@@ -43,8 +34,6 @@
       flex-direction: column;
       box-shadow: inset 0 0 0 1px rgba(255,255,255,0.1);
     }
-
-    /* 顶部状态栏 */
     .status-bar {
       background: #ffffff;
       padding: 14px 20px 8px;
@@ -55,8 +44,6 @@
       color: #1c1c1e;
       border-bottom: 1px solid #e9ecf0;
     }
-
-    /* 聊天记录区域 */
     .chat-container {
       flex: 1;
       overflow-y: auto;
@@ -66,21 +53,12 @@
       gap: 14px;
       background: #f8f9fc;
     }
-
-    /* 消息气泡 */
     .message {
       display: flex;
       max-width: 85%;
     }
-
-    .message.user {
-      align-self: flex-end;
-    }
-
-    .message.assistant {
-      align-self: flex-start;
-    }
-
+    .message.user { align-self: flex-end; }
+    .message.assistant { align-self: flex-start; }
     .bubble {
       padding: 12px 16px;
       border-radius: 22px;
@@ -89,38 +67,25 @@
       word-break: break-word;
       box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
-
     .user .bubble {
       background: #007aff;
       color: white;
       border-bottom-right-radius: 6px;
     }
-
     .assistant .bubble {
       background: white;
       color: #1c1c1e;
       border-bottom-left-radius: 6px;
       border: 1px solid #e4e7eb;
     }
-
-    /* 角色名称 */
     .sender-name {
       font-size: 12px;
       margin-bottom: 4px;
       color: #6c757d;
       font-weight: 500;
     }
-
-    .user .sender-name {
-      text-align: right;
-      margin-right: 4px;
-    }
-
-    .assistant .sender-name {
-      margin-left: 4px;
-    }
-
-    /* 输入区域 */
+    .user .sender-name { text-align: right; margin-right: 4px; }
+    .assistant .sender-name { margin-left: 4px; }
     .input-area {
       background: white;
       padding: 12px 16px;
@@ -129,7 +94,6 @@
       gap: 10px;
       align-items: center;
     }
-
     .input-area input {
       flex: 1;
       border: 1px solid #d1d5db;
@@ -140,12 +104,7 @@
       outline: none;
       transition: border 0.2s;
     }
-
-    .input-area input:focus {
-      border-color: #007aff;
-      background: white;
-    }
-
+    .input-area input:focus { border-color: #007aff; background: white; }
     .input-area button {
       background: #007aff;
       border: none;
@@ -160,12 +119,7 @@
       transition: 0.2s;
       flex-shrink: 0;
     }
-
-    .input-area button:hover {
-      background: #005bbf;
-    }
-
-    /* 设置按钮 */
+    .input-area button:hover { background: #005bbf; }
     .settings-btn {
       background: none;
       border: none;
@@ -174,8 +128,6 @@
       color: #007aff;
       padding: 0 4px;
     }
-
-    /* 自定义面板 */
     .custom-panel {
       background: white;
       border-top: 1px solid #e9ecf0;
@@ -184,23 +136,17 @@
       flex-direction: column;
       gap: 12px;
     }
-
-    .custom-panel.show {
-      display: flex;
-    }
-
+    .custom-panel.show { display: flex; }
     .form-group {
       display: flex;
       flex-direction: column;
       gap: 6px;
     }
-
     .form-group label {
       font-size: 13px;
       font-weight: 600;
       color: #3a3f47;
     }
-
     .form-group input, .form-group textarea {
       padding: 10px 12px;
       border: 1px solid #d1d5db;
@@ -208,25 +154,21 @@
       font-size: 14px;
       background: #f9fafb;
     }
-
     .form-group textarea {
       min-height: 70px;
       resize: vertical;
     }
-
     .color-row {
       display: flex;
       gap: 8px;
       align-items: center;
     }
-
     .color-row input[type="color"] {
       width: 48px;
       height: 40px;
       padding: 2px;
       border-radius: 12px;
     }
-
     .save-btn {
       background: #007aff;
       color: white;
@@ -238,36 +180,24 @@
       margin-top: 6px;
       cursor: pointer;
     }
-
-    .user-avatar, .assistant-avatar {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background: #cbd5e1;
-      background-size: cover;
-      margin: 0 6px;
+    .api-warning {
+      font-size: 11px;
+      color: #888;
+      margin-top: 4px;
     }
   </style>
 </head>
 <body>
 <div class="phone-frame">
   <div class="screen">
-    <!-- 状态栏 / 标题栏 -->
     <div class="status-bar">
       <span>📱 小手机</span>
       <button class="settings-btn" id="toggleSettingsBtn" title="自定义角色">⚙️</button>
     </div>
 
-    <!-- 聊天消息列表 -->
-    <div class="chat-container" id="chatContainer">
-      <!-- 消息会动态插入这里 -->
-      <div class="message assistant">
-        <div class="sender-name" id="assistantDisplayName">小助手</div>
-        <div class="bubble">你好！我是你的AI伙伴。点击右上角⚙️来定制我的人设～</div>
-      </div>
-    </div>
+    <div class="chat-container" id="chatContainer"></div>
 
-    <!-- 自定义面板（默认隐藏） -->
+    <!-- 自定义面板 -->
     <div class="custom-panel" id="customPanel">
       <div class="form-group">
         <label>👤 你的昵称</label>
@@ -278,14 +208,18 @@
         <input type="text" id="assistantNameInput" placeholder="例如：小暖" value="小助手">
       </div>
       <div class="form-group">
-        <label>🧠 AI 人设 (System Prompt)</label>
+        <label>🧠 AI 人设</label>
         <textarea id="personalityInput" placeholder="描述AI的性格、语气、身份...">你是用户的好朋友，说话温暖、简短、有趣。</textarea>
+      </div>
+      <div class="form-group">
+        <label>🔑 DeepSeek API Key</label>
+        <input type="password" id="apiKeyInput" placeholder="sk-xxxx... 申请地址见下方" autocomplete="off">
+        <span class="api-warning">👉 去 platform.deepseek.com 免费获取，存在你的浏览器里</span>
       </div>
       <div class="form-group">
         <label>💬 你的气泡颜色</label>
         <div class="color-row">
           <input type="color" id="userBubbleColorInput" value="#007aff">
-          <span>（点击选取）</span>
         </div>
       </div>
       <div class="form-group">
@@ -295,10 +229,9 @@
         </div>
       </div>
       <button class="save-btn" id="saveSettingsBtn">保存设置并应用</button>
-      <p style="font-size:12px; color:#888; text-align:center;">✨ 聊天记录自动保存在你的浏览器中</p>
+      <p style="font-size:12px; color:#888; text-align:center;">✨ 所有数据只保存在你的设备中</p>
     </div>
 
-    <!-- 底部输入区 -->
     <div class="input-area">
       <input type="text" id="messageInput" placeholder="说点什么..." autocomplete="off">
       <button id="sendBtn">↑</button>
@@ -310,7 +243,6 @@
   (function(){
     'use strict';
 
-    // ---------- DOM 元素 ----------
     const chatContainer = document.getElementById('chatContainer');
     const messageInput = document.getElementById('messageInput');
     const sendBtn = document.getElementById('sendBtn');
@@ -318,54 +250,43 @@
     const customPanel = document.getElementById('customPanel');
     const saveSettingsBtn = document.getElementById('saveSettingsBtn');
 
-    // 自定义设置输入项
     const userNameInput = document.getElementById('userNameInput');
     const assistantNameInput = document.getElementById('assistantNameInput');
     const personalityInput = document.getElementById('personalityInput');
+    const apiKeyInput = document.getElementById('apiKeyInput');
     const userBubbleColorInput = document.getElementById('userBubbleColorInput');
     const assistantBubbleColorInput = document.getElementById('assistantBubbleColorInput');
-    const assistantDisplayName = document.getElementById('assistantDisplayName');
 
-    // ---------- 默认数据 ----------
-    let chatHistory = []; // 存储 { role, content }
-
-    // 用户设置 (从 localStorage 读取或默认)
+    let chatHistory = [];
     let settings = {
       userName: '我',
       assistantName: '小助手',
       personality: '你是用户的好朋友，说话温暖、简短、有趣。',
+      apiKey: '',
       userBubbleColor: '#007aff',
       assistantBubbleColor: '#ffffff'
     };
 
-    // ---------- 初始化加载本地存储 ----------
+    // ---------- 本地存储 ----------
     function loadFromStorage() {
       try {
         const savedSettings = localStorage.getItem('myAiPhone_settings');
         if (savedSettings) {
-          const parsed = JSON.parse(savedSettings);
-          settings = { ...settings, ...parsed };
+          settings = { ...settings, ...JSON.parse(savedSettings) };
         }
         const savedHistory = localStorage.getItem('myAiPhone_history');
         if (savedHistory) {
           chatHistory = JSON.parse(savedHistory);
-        } else {
-          // 如果没有历史记录，添加一条欢迎消息（但不保存到历史）
-          chatHistory = [];
         }
-      } catch (e) {
-        console.warn('读取本地存储失败', e);
-      }
-
-      // 同步 UI 输入框
+      } catch (e) {}
+      
       userNameInput.value = settings.userName;
       assistantNameInput.value = settings.assistantName;
       personalityInput.value = settings.personality;
+      apiKeyInput.value = settings.apiKey || '';
       userBubbleColorInput.value = settings.userBubbleColor;
       assistantBubbleColorInput.value = settings.assistantBubbleColor;
-      assistantDisplayName.textContent = settings.assistantName;
-
-      // 应用颜色
+      
       applyBubbleColors();
     }
 
@@ -377,9 +298,7 @@
       localStorage.setItem('myAiPhone_history', JSON.stringify(chatHistory));
     }
 
-    // 应用气泡颜色（动态更新样式）
     function applyBubbleColors() {
-      // 创建或更新 style 标签
       let styleTag = document.getElementById('dynamic-bubble-style');
       if (!styleTag) {
         styleTag = document.createElement('style');
@@ -392,63 +311,53 @@
       `;
     }
 
-    // 渲染聊天记录到界面
     function renderMessages() {
       chatContainer.innerHTML = '';
-      
-      // 如果没有任何消息，显示一条默认欢迎语（仅用于展示，不存入历史）
       if (chatHistory.length === 0) {
         const welcomeDiv = document.createElement('div');
         welcomeDiv.className = 'message assistant';
         welcomeDiv.innerHTML = `
           <div class="sender-name">${settings.assistantName}</div>
-          <div class="bubble">你好！我是你的AI伙伴。点击右上角⚙️来定制我的人设～</div>
+          <div class="bubble">你好！我是你的AI伙伴。点击右上角⚙️先设置API Key，我就能陪你聊天啦～</div>
         `;
         chatContainer.appendChild(welcomeDiv);
         return;
       }
-
       chatHistory.forEach(msg => {
         const msgDiv = document.createElement('div');
         msgDiv.className = `message ${msg.role}`;
-        
         const senderName = msg.role === 'user' ? settings.userName : settings.assistantName;
-        
         msgDiv.innerHTML = `
           <div class="sender-name">${senderName}</div>
           <div class="bubble">${escapeHtml(msg.content)}</div>
         `;
         chatContainer.appendChild(msgDiv);
       });
-
-      // 滚动到底部
       chatContainer.scrollTop = chatContainer.scrollHeight;
     }
 
-    // 简单的转义防止XSS
     function escapeHtml(text) {
       const div = document.createElement('div');
       div.textContent = text;
       return div.innerHTML;
     }
 
-    // 添加消息到历史并渲染
     function addMessage(role, content) {
       chatHistory.push({ role, content });
       saveHistoryToStorage();
       renderMessages();
     }
 
-    // ---------- 调用 DeepSeek API ----------
     async function callDeepSeekAPI(userMessage) {
-      // 注意：需要替换为你的真实 API Key
-      const API_KEY = 'DEEPSEEK_API_KEY_PLACEHOLDER';  // 👈 下一步替换这里
-      const API_URL = 'https://api.deepseek.com/v1/chat/completions';
+      const apiKey = settings.apiKey;
+      if (!apiKey) {
+        return '❌ 请先在设置里填写你的 DeepSeek API Key。\n\n👉 去 platform.deepseek.com 免费注册获取。';
+      }
 
-      // 构建 messages：system + 历史 + 最新 user
+      const API_URL = 'https://api.deepseek.com/v1/chat/completions';
       const messages = [
         { role: 'system', content: settings.personality },
-        ...chatHistory.slice(-10),  // 保留最近10条作为上下文
+        ...chatHistory.slice(-10),
       ];
 
       try {
@@ -456,7 +365,7 @@
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${API_KEY}`
+            'Authorization': `Bearer ${apiKey}`
           },
           body: JSON.stringify({
             model: 'deepseek-chat',
@@ -468,44 +377,37 @@
 
         const data = await response.json();
         if (!response.ok) {
-          throw new Error(data.error?.message || 'API请求失败');
+          throw new Error(data.error?.message || '请求失败');
         }
-        
-        const aiContent = data.choices[0].message.content;
-        return aiContent;
+        return data.choices[0].message.content;
       } catch (error) {
-        console.error('AI调用出错:', error);
-        return '哎呀，信号不太好，等会儿再试试？';
+        console.error(error);
+        return '😵 出错啦，可能是 API Key 无效或网络问题。';
       }
     }
 
-    // 处理发送消息
     async function handleSendMessage() {
       const text = messageInput.value.trim();
       if (!text) return;
 
-      // 添加用户消息
       addMessage('user', text);
       messageInput.value = '';
       sendBtn.disabled = true;
 
-      // 显示一个临时的“正在输入...”
       const typingId = showTypingIndicator();
-
       try {
         const aiReply = await callDeepSeekAPI(text);
         removeTypingIndicator(typingId);
         addMessage('assistant', aiReply);
       } catch (e) {
         removeTypingIndicator(typingId);
-        addMessage('assistant', '出错啦，稍后再试试～');
+        addMessage('assistant', '出错啦，稍后再试～');
       } finally {
         sendBtn.disabled = false;
         messageInput.focus();
       }
     }
 
-    // 显示“正在输入”的动画
     function showTypingIndicator() {
       const id = 'typing-' + Date.now();
       const typingDiv = document.createElement('div');
@@ -525,30 +427,20 @@
       if (el) el.remove();
     }
 
-    // ---------- 保存设置 ----------
     function applySettings() {
-      // 读取表单
       settings.userName = userNameInput.value.trim() || '我';
       settings.assistantName = assistantNameInput.value.trim() || 'AI';
       settings.personality = personalityInput.value.trim() || '你是一个友好的助手。';
+      settings.apiKey = apiKeyInput.value.trim();
       settings.userBubbleColor = userBubbleColorInput.value;
       settings.assistantBubbleColor = assistantBubbleColorInput.value;
 
-      // 更新 UI
-      assistantDisplayName.textContent = settings.assistantName;
-      applyBubbleColors();
-      
-      // 保存
       saveSettingsToStorage();
-      
-      // 重新渲染聊天（因为名称可能变化）
+      applyBubbleColors();
       renderMessages();
-      
-      // 关闭面板
       customPanel.classList.remove('show');
     }
 
-    // ---------- 事件绑定 ----------
     sendBtn.addEventListener('click', handleSendMessage);
     messageInput.addEventListener('keypress', (e) => {
       if (e.key === 'Enter') {
@@ -556,20 +448,14 @@
         handleSendMessage();
       }
     });
-
     toggleSettingsBtn.addEventListener('click', () => {
       customPanel.classList.toggle('show');
     });
-
     saveSettingsBtn.addEventListener('click', applySettings);
 
-    // 点击面板外部不自动关闭，但我们允许用户再次点击设置按钮关闭
-
-    // ---------- 启动！----------
     loadFromStorage();
     renderMessages();
     applyBubbleColors();
-
   })();
 </script>
 </body>
