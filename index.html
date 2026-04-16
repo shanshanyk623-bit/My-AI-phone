@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>小手机 · 我的AI伙伴</title>
+  <title>小手机 · 失眠梦</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -21,7 +21,7 @@
       background: #0f0f0f;
       border-radius: 48px;
       padding: 12px;
-      box-shadow: 0 30px 60px rgba(0,0,0,0.7), 0 0 0 2px rgba(255,255,255,0.05);
+      box-shadow: 0 30px 60px rgba(0,0,0,0.7);
       margin: 0 auto;
     }
     .screen {
@@ -32,7 +32,6 @@
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      position: relative;
     }
     .view {
       flex: 1;
@@ -43,7 +42,7 @@
     }
     .view.active { display: flex; }
 
-    /* ----- 主屏幕 (精致版) ----- */
+    /* ----- 主屏幕 ----- */
     #homeView { background: transparent; }
     .home-screen {
       display: flex;
@@ -76,18 +75,20 @@
       font-size: 76px; font-weight: 300;
       color: white;
       text-shadow: 0 4px 20px rgba(0,0,0,0.4);
-      letter-spacing: 2px;
     }
     .home-date-large {
       font-size: 18px; color: rgba(255,255,255,0.8);
       margin-top: 6px; font-weight: 400;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    .home-signature {
+      margin-top: 8px; color: rgba(255,255,255,0.6);
+      font-size: 14px; font-style: italic;
     }
     .home-app-grid {
       position: relative; z-index: 5;
       flex: 1; display: flex; flex-direction: column;
       justify-content: center;
-      padding: 0 20px; margin-top: 10px;
+      padding: 0 20px;
     }
     .home-app-row {
       display: flex; justify-content: space-around;
@@ -107,26 +108,18 @@
       border-radius: 24px;
       display: flex; align-items: center; justify-content: center;
       font-size: 38px;
-      box-shadow: 0 12px 24px -8px rgba(0,0,0,0.4), inset 0 1px 2px rgba(255,255,255,0.2);
+      box-shadow: 0 12px 24px -8px rgba(0,0,0,0.4);
       border: 1px solid rgba(255,255,255,0.1);
     }
     .icon-label {
       font-size: 14px; font-weight: 500;
       color: rgba(255,255,255,0.95);
-      text-shadow: 0 2px 6px rgba(0,0,0,0.3);
-    }
-    .home-footer {
-      position: relative; z-index: 5;
-      text-align: center; padding: 20px 0 30px;
-      color: rgba(255,255,255,0.4);
-      font-size: 13px;
     }
 
-    /* ----- 通用状态栏 ----- */
+    /* ----- 状态栏 ----- */
     .status-bar {
       background: rgba(255,255,255,0.85);
       backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
       padding: 14px 20px 8px;
       display: flex;
       justify-content: space-between;
@@ -146,82 +139,65 @@
       color: #007aff;
     }
 
-    /* ----- 聊天视图 (精致气泡) ----- */
+    /* ----- 底部导航 ----- */
+    .bottom-nav {
+      background: rgba(255,255,255,0.9);
+      backdrop-filter: blur(20px);
+      display: flex;
+      justify-content: space-around;
+      padding: 8px 16px 20px;
+      border-top: 1px solid rgba(0,0,0,0.05);
+    }
+    .nav-item {
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      background: none; border: none;
+      color: #8e8e93; font-size: 12px; font-weight: 500;
+      cursor: pointer; padding: 6px 12px; border-radius: 30px;
+    }
+    .nav-item.active { color: #007aff; background: rgba(0,122,255,0.1); }
+    .nav-icon { font-size: 22px; }
+
+    /* ----- 聊天视图 ----- */
     .chat-container {
-      flex: 1; overflow-y: auto;
-      padding: 16px 12px;
-      display: flex; flex-direction: column;
-      gap: 16px;
+      flex: 1; overflow-y: auto; padding: 16px 12px;
+      display: flex; flex-direction: column; gap: 16px;
       background: #edeef2;
     }
     .message {
-      display: flex; align-items: flex-end;
-      max-width: 85%;
-      gap: 8px;
+      display: flex; align-items: flex-end; max-width: 85%; gap: 8px;
     }
-    .message.user {
-      align-self: flex-end;
-      flex-direction: row-reverse;
-    }
+    .message.user { align-self: flex-end; flex-direction: row-reverse; }
     .message.assistant { align-self: flex-start; }
     .avatar-chat {
-      width: 36px; height: 36px;
-      border-radius: 50%;
-      background: #cbd5e1;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 20px;
-      flex-shrink: 0;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      width: 36px; height: 36px; border-radius: 50%;
+      background: #cbd5e1; display: flex; align-items: center; justify-content: center;
+      font-size: 20px; flex-shrink: 0;
     }
-    .user .avatar-chat { background: #007aff; color: white; }
-    .bubble-wrapper {
-      display: flex; flex-direction: column;
-    }
-    .sender-name {
-      font-size: 12px; margin-bottom: 4px;
-      color: #6c757d; font-weight: 500;
-    }
-    .user .sender-name { text-align: right; margin-right: 6px; }
-    .assistant .sender-name { margin-left: 6px; }
+    .bubble-wrapper { display: flex; flex-direction: column; }
+    .sender-name { font-size: 12px; margin-bottom: 4px; color: #6c757d; }
     .bubble {
       padding: 12px 16px; border-radius: 22px;
-      font-size: 15px; line-height: 1.45;
-      word-break: break-word;
+      font-size: 15px; line-height: 1.45; word-break: break-word;
       box-shadow: 0 2px 6px rgba(0,0,0,0.05);
     }
-    .user .bubble {
-      background: #007aff; color: white;
-      border-bottom-right-radius: 6px;
-    }
-    .assistant .bubble {
-      background: white; color: #1c1c1e;
-      border-bottom-left-radius: 6px;
-      border: 1px solid #e4e7eb;
-    }
+    .user .bubble { background: #007aff; color: white; }
+    .assistant .bubble { background: white; color: #1c1c1e; border: 1px solid #e4e7eb; }
     .input-area {
       background: rgba(255,255,255,0.9);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      padding: 12px 16px;
-      border-top: 1px solid rgba(0,0,0,0.05);
+      padding: 12px 16px; border-top: 1px solid rgba(0,0,0,0.05);
       display: flex; gap: 10px; align-items: center;
     }
     .input-area input {
-      flex: 1;
-      border: 1px solid rgba(0,0,0,0.1);
-      border-radius: 28px;
-      padding: 12px 18px;
-      font-size: 15px;
-      background: white;
-      outline: none;
+      flex: 1; border: 1px solid rgba(0,0,0,0.1); border-radius: 28px;
+      padding: 12px 18px; font-size: 15px; background: white; outline: none;
     }
-    .input-area input:focus { border-color: #007aff; }
-    .input-area button {
+    .send-btn {
       background: #007aff; border: none; color: white;
       width: 48px; height: 48px; border-radius: 30px;
       font-size: 18px; font-weight: 600; cursor: pointer;
-      box-shadow: 0 4px 8px rgba(0,122,255,0.2);
     }
+
+    /* ----- 设置面板 ----- */
     .custom-panel {
       background: white; border-top: 1px solid #e9ecf0;
       padding: 16px; display: none; flex-direction: column; gap: 12px;
@@ -229,70 +205,48 @@
     .custom-panel.show { display: flex; }
     .form-group { display: flex; flex-direction: column; gap: 6px; }
     .form-group label { font-size: 13px; font-weight: 600; color: #3a3f47; }
-    .form-group input, .form-group textarea, .form-group select {
+    .form-group input, .form-group textarea {
       padding: 10px 12px; border: 1px solid #d1d5db;
       border-radius: 14px; font-size: 14px; background: #f9fafb;
     }
     .save-btn {
       background: #007aff; color: white; border: none;
-      padding: 12px; border-radius: 30px;
-      font-weight: 600; font-size: 16px; cursor: pointer;
+      padding: 12px; border-radius: 30px; font-weight: 600; cursor: pointer;
     }
 
-    /* ----- 世界视图 (朋友圈风格) ----- */
+    /* ----- 世界视图 ----- */
     .feed { padding: 12px; }
     .post-card {
       background: white; border-radius: 24px; padding: 16px;
       margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.04);
     }
-    .post-header {
-      display: flex; align-items: center; gap: 12px; margin-bottom: 12px;
-    }
+    .post-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
     .post-avatar {
       width: 48px; height: 48px; border-radius: 50%;
       background: linear-gradient(135deg, #fbc2eb, #a6c1ee);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 26px;
+      display: flex; align-items: center; justify-content: center; font-size: 26px;
     }
     .post-user h4 { font-size: 16px; font-weight: 600; }
     .post-user p { font-size: 12px; color: #8e8e93; }
-    .post-content {
-      margin-bottom: 12px;
-    }
-    .post-text {
-      font-size: 15px; line-height: 1.5; color: #1c1c1e;
-      margin-bottom: 10px;
-    }
-    .post-tags {
-      display: flex; gap: 8px; flex-wrap: wrap;
-      margin-bottom: 12px;
-    }
-    .tag {
-      background: #f0f2f5; color: #007aff;
-      padding: 4px 12px; border-radius: 30px;
-      font-size: 12px; font-weight: 500;
-    }
+    .post-text { font-size: 15px; line-height: 1.5; color: #1c1c1e; margin-bottom: 10px; }
+    .post-tags { display: flex; gap: 8px; margin-bottom: 12px; }
+    .tag { background: #f0f2f5; color: #007aff; padding: 4px 12px; border-radius: 30px; font-size: 12px; }
     .post-stats {
-      display: flex; gap: 24px; color: #6c757d;
-      font-size: 13px; border-top: 1px solid #f0f0f0;
-      padding-top: 14px; margin-top: 4px;
+      display: flex; gap: 24px; color: #6c757d; font-size: 13px;
+      border-top: 1px solid #f0f0f0; padding-top: 14px;
     }
-    .post-stats span { display: flex; align-items: center; gap: 6px; }
 
-    /* ----- 我的视图 & 世界书视图 ----- */
+    /* ----- 我的视图 & 世界书 & AI手机视图 ----- */
     .profile-content { padding: 16px; }
     .profile-card {
       background: white; border-radius: 24px; padding: 20px;
       margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.04);
     }
-    .profile-header {
-      display: flex; align-items: center; gap: 24px;
-    }
+    .profile-header { display: flex; align-items: center; gap: 24px; }
     .profile-avatar {
       width: 80px; height: 80px; border-radius: 50%;
       background: linear-gradient(135deg, #a8edea, #fed6e3);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 42px;
+      display: flex; align-items: center; justify-content: center; font-size: 42px;
     }
     .profile-stats { display: flex; gap: 24px; }
     .stat-item { text-align: center; }
@@ -300,9 +254,38 @@
     .stat-label { font-size: 13px; color: #8e8e93; }
     .menu-item {
       display: flex; align-items: center; gap: 16px;
-      padding: 16px 0; border-bottom: 1px solid #f0f0f0;
+      padding: 16px 0; border-bottom: 1px solid #f0f0f0; cursor: pointer;
     }
     .menu-icon { width: 36px; text-align: center; font-size: 24px; }
+
+    /* AI手机内部视图 */
+    .ai-phone-tabs {
+      display: flex; border-bottom: 1px solid #e9ecf0; background: white;
+    }
+    .ai-tab {
+      flex: 1; text-align: center; padding: 14px; font-size: 14px; font-weight: 500;
+      color: #6c757d; cursor: pointer; border-bottom: 2px solid transparent;
+    }
+    .ai-tab.active { color: #007aff; border-bottom-color: #007aff; }
+    .ai-tab-content { padding: 16px; }
+    .ai-tab-pane { display: none; }
+    .ai-tab-pane.active { display: block; }
+    .receipt-card, .chat-record-card, .transaction-card {
+      background: white; border-radius: 16px; padding: 16px;
+      margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .receipt-header { display: flex; justify-content: space-between; margin-bottom: 8px; }
+    .receipt-shop { font-weight: 600; }
+    .receipt-time { color: #8e8e93; font-size: 12px; }
+    .receipt-items { margin: 10px 0; padding: 10px 0; border-top: 1px dashed #e0e0e0; border-bottom: 1px dashed #e0e0e0; }
+    .receipt-item { display: flex; justify-content: space-between; margin-bottom: 6px; }
+    .receipt-total { display: flex; justify-content: space-between; font-weight: 600; margin-top: 8px; }
+    .loading-placeholder {
+      text-align: center; color: #8e8e93; padding: 40px;
+    }
+    .error-placeholder {
+      text-align: center; color: #ff3b30; padding: 40px;
+    }
   </style>
 </head>
 <body>
@@ -319,31 +302,15 @@
         <div class="home-clock">
           <div class="home-time-large" id="liveTimeLarge">--:--</div>
           <div class="home-date-large" id="liveDateLarge">----年--月--日</div>
+          <div class="home-signature" id="homeSignature">✨ Only one · 爱只爱</div>
         </div>
         <div class="home-app-grid">
           <div class="home-app-row">
-            <div class="home-app-icon" data-open="chat">
-              <div class="icon-bg">💬</div>
-              <span class="icon-label">聊天</span>
-            </div>
-            <div class="home-app-icon" data-open="world">
-              <div class="icon-bg">🌍</div>
-              <span class="icon-label">世界</span>
-            </div>
+            <div class="home-app-icon" data-open="chat"><div class="icon-bg">💬</div><span class="icon-label">Chat</span></div>
+            <div class="home-app-icon" data-open="world"><div class="icon-bg">🌍</div><span class="icon-label">Prism</span></div>
+            <div class="home-app-icon" data-open="profile"><div class="icon-bg">👤</div><span class="icon-label">角色</span></div>
+            <div class="home-app-icon" data-open="settings"><div class="icon-bg">⚙️</div><span class="icon-label">设置</span></div>
           </div>
-          <div class="home-app-row">
-            <div class="home-app-icon" data-open="profile">
-              <div class="icon-bg">👤</div>
-              <span class="icon-label">我的</span>
-            </div>
-            <div class="home-app-icon" data-open="settings">
-              <div class="icon-bg">⚙️</div>
-              <span class="icon-label">设置</span>
-            </div>
-          </div>
-        </div>
-        <div class="home-footer">
-          <span>✨ 小手机 · 你的AI伙伴</span>
         </div>
       </div>
     </div>
@@ -351,15 +318,15 @@
     <!-- 聊天视图 -->
     <div id="chatView" class="view">
       <div class="status-bar">
-        <button class="back-home-btn">←</button>
-        <span>💬 聊天</span>
+        <button class="back-home-btn" data-back="home">←</button>
+        <span>💬 Chat</span>
         <button class="settings-btn" id="toggleSettingsBtn">⚙️</button>
       </div>
       <div class="chat-container" id="chatContainer"></div>
       <div class="custom-panel" id="customPanel">
         <div class="form-group"><label>👤 你的昵称</label><input type="text" id="userNameInput" value="我"></div>
-        <div class="form-group"><label>🤖 AI 昵称</label><input type="text" id="assistantNameInput" value="小助手"></div>
-        <div class="form-group"><label>🧠 AI 人设</label><textarea id="personalityInput" rows="3">你是用户的好朋友，说话温暖、简短、有趣。</textarea></div>
+        <div class="form-group"><label>🤖 AI 昵称</label><input type="text" id="assistantNameInput" value="小暖"></div>
+        <div class="form-group"><label>🧠 AI 人设</label><textarea id="personalityInput" rows="3">你是小暖，一个温柔贴心的挚友，说话温暖治愈，偶尔带点俏皮。</textarea></div>
         <div class="form-group"><label>🔑 DeepSeek API Key</label><input type="password" id="apiKeyInput" placeholder="sk-xxxx..."></div>
         <div class="form-group"><label>💬 你的气泡颜色</label><input type="color" id="userBubbleColorInput" value="#007aff"></div>
         <div class="form-group"><label>💬 AI 气泡颜色</label><input type="color" id="assistantBubbleColorInput" value="#ffffff"></div>
@@ -368,27 +335,25 @@
       </div>
       <div class="input-area">
         <input type="text" id="messageInput" placeholder="说点什么..." autocomplete="off">
-        <button id="sendBtn">↑</button>
+        <button class="send-btn" id="sendBtn">↑</button>
       </div>
     </div>
 
-    <!-- 世界视图 (朋友圈风格) -->
+    <!-- 世界视图 (Prism论坛) -->
     <div id="worldView" class="view">
       <div class="status-bar">
-        <button class="back-home-btn">←</button>
-        <span>🌍 世界</span>
+        <button class="back-home-btn" data-back="home">←</button>
+        <span>🌍 Prism</span>
         <span>🔔</span>
       </div>
-      <div class="feed" id="feedContainer">
-        <!-- 动态会通过JS动态渲染，也保留静态示例 -->
-      </div>
+      <div class="feed" id="feedContainer"></div>
     </div>
 
-    <!-- 我的视图 -->
+    <!-- 我的视图 (角色管理) -->
     <div id="profileView" class="view">
       <div class="status-bar">
-        <button class="back-home-btn">←</button>
-        <span>👤 我的</span>
+        <button class="back-home-btn" data-back="home">←</button>
+        <span>👤 角色</span>
         <span>⚙️</span>
       </div>
       <div class="profile-content">
@@ -402,15 +367,10 @@
           </div>
         </div>
         <div class="profile-card">
-          <div class="menu-item" id="openWorldBookBtn">
-            <span class="menu-icon">📖</span> 世界书 · 自定义设定
-          </div>
-          <div class="menu-item">
-            <span class="menu-icon">💾</span> 聊天记录 · 永久保存
-          </div>
-          <div class="menu-item">
-            <span class="menu-icon">🎨</span> 主题美化 · 更多颜色
-          </div>
+          <div class="menu-item" id="openWorldBookBtn"><span class="menu-icon">📖</span> 世界书</div>
+          <div class="menu-item" id="openAIPhoneBtn"><span class="menu-icon">📱</span> Link · 查手机</div>
+          <div class="menu-item" id="openDiaryBtn"><span class="menu-icon">📓</span> 平行日记 (开发中)</div>
+          <div class="menu-item" id="openGameBtn"><span class="menu-icon">🎮</span> SO3·游戏 (开发中)</div>
         </div>
       </div>
     </div>
@@ -418,28 +378,49 @@
     <!-- 世界书编辑视图 -->
     <div id="worldBookView" class="view">
       <div class="status-bar">
-        <button class="back-home-btn">←</button>
+        <button class="back-home-btn" data-back="profile">←</button>
         <span>📖 世界书</span>
         <button class="save-worldbook-btn" style="background:none;border:none;font-size:18px;color:#007aff;cursor:pointer;">保存</button>
       </div>
       <div style="padding:16px;">
-        <div class="form-group">
-          <label>🌍 世界名称</label>
-          <input type="text" id="worldNameInput" placeholder="例如：星光镇" value="我的小世界">
-        </div>
-        <div class="form-group">
-          <label>📜 世界观描述</label>
-          <textarea id="worldDescInput" rows="3" placeholder="描述这个世界的背景、规则、氛围...">这是一个温暖的小镇，居民友善，生活节奏慢。</textarea>
-        </div>
-        <div class="form-group">
-          <label>🧑‍🤝‍🧑 角色列表</label>
-          <textarea id="charactersInput" rows="5" placeholder="每行一个，格式：名字,身份,性格">小暖,挚友,开朗活泼&#10;小冷,邻居,毒舌但善良</textarea>
-          <span style="font-size:12px;color:#888;">每行一个角色，用英文逗号分隔</span>
-        </div>
-        <p style="font-size:13px;color:#666;margin-top:16px;">✨ 保存后，聊天时AI会自动理解这些设定。</p>
+        <div class="form-group"><label>🌍 世界名称</label><input type="text" id="worldNameInput" value="星光镇"></div>
+        <div class="form-group"><label>📜 世界观描述</label><textarea id="worldDescInput" rows="3">一个温暖的海边小镇，居民友善，生活节奏慢，充满日常小确幸。</textarea></div>
+        <div class="form-group"><label>🧑‍🤝‍🧑 角色列表</label><textarea id="charactersInput" rows="5" placeholder="每行一个，格式：名字,身份,性格">小暖,挚友,开朗治愈&#10;小冷,邻居,外冷内热&#10;咖啡店长,长辈,温柔沉稳</textarea></div>
       </div>
     </div>
 
+    <!-- AI手机视图 (Link · 查手机) -->
+    <div id="aiPhoneView" class="view">
+      <div class="status-bar">
+        <button class="back-home-btn" data-back="profile">←</button>
+        <span>📱 小暖的手机</span>
+        <button class="refresh-ai-phone-btn" style="background:none;border:none;font-size:20px;cursor:pointer;" title="刷新数据">🔄</button>
+      </div>
+      <div class="ai-phone-tabs">
+        <div class="ai-tab active" data-tab="gallery">📷 相册</div>
+        <div class="ai-tab" data-tab="chats">💬 聊天</div>
+        <div class="ai-tab" data-tab="wallet">💰 钱包</div>
+      </div>
+      <div class="ai-tab-content">
+        <div class="ai-tab-pane active" id="pane-gallery">
+          <div class="loading-placeholder">✨ 正在生成相册...</div>
+        </div>
+        <div class="ai-tab-pane" id="pane-chats">
+          <div class="loading-placeholder">✨ 正在加载聊天记录...</div>
+        </div>
+        <div class="ai-tab-pane" id="pane-wallet">
+          <div class="loading-placeholder">✨ 正在生成钱包数据...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 底部导航 -->
+    <div class="bottom-nav">
+      <button class="nav-item" data-view="home"><span class="nav-icon">🏠</span>主页</button>
+      <button class="nav-item" data-view="chat"><span class="nav-icon">💬</span>Chat</button>
+      <button class="nav-item" data-view="world"><span class="nav-icon">🌍</span>Prism</button>
+      <button class="nav-item" data-view="profile"><span class="nav-icon">👤</span>角色</button>
+    </div>
   </div>
 </div>
 
@@ -447,13 +428,14 @@
   (function(){
     'use strict';
 
-    // DOM 元素
+    // ---------- DOM 元素 ----------
     const views = {
       home: document.getElementById('homeView'),
       chat: document.getElementById('chatView'),
       world: document.getElementById('worldView'),
       profile: document.getElementById('profileView'),
-      worldBook: document.getElementById('worldBookView')
+      worldBook: document.getElementById('worldBookView'),
+      aiPhone: document.getElementById('aiPhoneView')
     };
     const chatContainer = document.getElementById('chatContainer');
     const messageInput = document.getElementById('messageInput');
@@ -469,31 +451,35 @@
     const assistantBubbleColorInput = document.getElementById('assistantBubbleColorInput');
     const feedContainer = document.getElementById('feedContainer');
 
+    // 状态
     let chatHistory = [];
     let settings = {
       userName: '我',
-      assistantName: '小助手',
-      personality: '你是用户的好朋友，说话温暖、简短、有趣。',
+      assistantName: '小暖',
+      personality: '你是小暖，一个温柔贴心的挚友，说话温暖治愈，偶尔带点俏皮。',
       apiKey: '',
       userBubbleColor: '#007aff',
       assistantBubbleColor: '#ffffff'
     };
     let worldBook = {
-      worldName: '我的小世界',
-      worldDesc: '这是一个温暖的小镇，居民友善，生活节奏慢。',
-      characters: ['小暖,挚友,开朗活泼', '小冷,邻居,毒舌但善良']
+      worldName: '星光镇',
+      worldDesc: '一个温暖的海边小镇，居民友善，生活节奏慢，充满日常小确幸。',
+      characters: ['小暖,挚友,开朗治愈', '小冷,邻居,外冷内热', '咖啡店长,长辈,温柔沉稳']
     };
 
     // ---------- 视图切换 ----------
     function switchView(viewName) {
       Object.values(views).forEach(v => v.classList.remove('active'));
       if (views[viewName]) views[viewName].classList.add('active');
+      document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('active');
+        if (item.dataset.view === viewName) item.classList.add('active');
+      });
     }
 
-    document.querySelectorAll('.back-home-btn').forEach(btn => {
-      btn.addEventListener('click', () => switchView('home'));
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.addEventListener('click', () => switchView(item.dataset.view));
     });
-
     document.querySelectorAll('.home-app-icon').forEach(icon => {
       icon.addEventListener('click', () => {
         const target = icon.dataset.open;
@@ -505,8 +491,11 @@
         }
       });
     });
+    document.querySelectorAll('.back-home-btn').forEach(btn => {
+      btn.addEventListener('click', () => switchView(btn.dataset.back || 'home'));
+    });
 
-    // 主屏幕时钟
+    // 时钟
     function updateHomeTime() {
       const timeSmall = document.getElementById('homeTime');
       const timeLarge = document.getElementById('liveTimeLarge');
@@ -524,12 +513,12 @@
     // ---------- 本地存储 ----------
     function loadFromStorage() {
       try {
-        const savedSettings = localStorage.getItem('myAiPhone_settings');
-        if (savedSettings) settings = { ...settings, ...JSON.parse(savedSettings) };
-        const savedHistory = localStorage.getItem('myAiPhone_history');
-        if (savedHistory) chatHistory = JSON.parse(savedHistory);
-        const savedWorld = localStorage.getItem('myAiPhone_worldbook');
-        if (savedWorld) worldBook = JSON.parse(savedWorld);
+        const s = localStorage.getItem('myAiPhone_settings');
+        if (s) settings = { ...settings, ...JSON.parse(s) };
+        const h = localStorage.getItem('myAiPhone_history');
+        if (h) chatHistory = JSON.parse(h);
+        const w = localStorage.getItem('myAiPhone_worldbook');
+        if (w) worldBook = JSON.parse(w);
       } catch(e){}
       userNameInput.value = settings.userName;
       assistantNameInput.value = settings.assistantName;
@@ -541,16 +530,9 @@
       renderMessages();
       renderFeed();
     }
-
-    function saveSettingsToStorage() {
-      localStorage.setItem('myAiPhone_settings', JSON.stringify(settings));
-    }
-    function saveHistory() {
-      localStorage.setItem('myAiPhone_history', JSON.stringify(chatHistory));
-    }
-    function saveWorldBookToStorage() {
-      localStorage.setItem('myAiPhone_worldbook', JSON.stringify(worldBook));
-    }
+    function saveSettings() { localStorage.setItem('myAiPhone_settings', JSON.stringify(settings)); }
+    function saveHistory() { localStorage.setItem('myAiPhone_history', JSON.stringify(chatHistory)); }
+    function saveWorldBook() { localStorage.setItem('myAiPhone_worldbook', JSON.stringify(worldBook)); }
 
     function applyBubbleColors() {
       let style = document.getElementById('dynamic-bubble-style');
@@ -559,90 +541,46 @@
         style.id = 'dynamic-bubble-style';
         document.head.appendChild(style);
       }
-      style.textContent = `
-        .message.user .bubble { background: ${settings.userBubbleColor} !important; }
-        .message.assistant .bubble { background: ${settings.assistantBubbleColor} !important; }
-      `;
+      style.textContent = `.user .bubble { background: ${settings.userBubbleColor} !important; } .assistant .bubble { background: ${settings.assistantBubbleColor} !important; }`;
     }
 
-    // 渲染聊天记录
     function renderMessages() {
       chatContainer.innerHTML = '';
       if (chatHistory.length === 0) {
-        const welcome = document.createElement('div');
-        welcome.className = 'message assistant';
-        welcome.innerHTML = `
-          <div class="avatar-chat">🤖</div>
-          <div class="bubble-wrapper">
-            <div class="sender-name">${settings.assistantName}</div>
-            <div class="bubble">你好！我是你的AI伙伴。点击右上角⚙️设置API Key，我就能陪你聊天啦～</div>
-          </div>
-        `;
-        chatContainer.appendChild(welcome);
+        chatContainer.innerHTML = `<div class="message assistant"><div class="avatar-chat">🤖</div><div class="bubble-wrapper"><div class="sender-name">${settings.assistantName}</div><div class="bubble">你好呀～我是${settings.assistantName}。先去设置里填一下API Key，我们就可以开始聊天啦！</div></div></div>`;
         return;
       }
       chatHistory.forEach(msg => {
         const div = document.createElement('div');
         div.className = `message ${msg.role}`;
-        const avatarEmoji = msg.role === 'user' ? '👤' : '🤖';
-        const sender = msg.role === 'user' ? settings.userName : settings.assistantName;
-        div.innerHTML = `
-          <div class="avatar-chat">${avatarEmoji}</div>
-          <div class="bubble-wrapper">
-            <div class="sender-name">${sender}</div>
-            <div class="bubble">${escapeHtml(msg.content)}</div>
-          </div>
-        `;
+        div.innerHTML = `<div class="avatar-chat">${msg.role === 'user' ? '👤' : '🤖'}</div><div class="bubble-wrapper"><div class="sender-name">${msg.role === 'user' ? settings.userName : settings.assistantName}</div><div class="bubble">${escapeHtml(msg.content)}</div></div>`;
         chatContainer.appendChild(div);
       });
       chatContainer.scrollTop = chatContainer.scrollHeight;
     }
 
-    function escapeHtml(text) {
-      const div = document.createElement('div');
-      div.textContent = text;
-      return div.innerHTML;
-    }
-
-    function addMessage(role, content) {
-      chatHistory.push({ role, content });
-      saveHistory();
-      renderMessages();
-    }
+    function escapeHtml(text) { const div = document.createElement('div'); div.textContent = text; return div.innerHTML; }
+    function addMessage(role, content) { chatHistory.push({ role, content }); saveHistory(); renderMessages(); }
 
     function getWorldBookPrompt() {
-      let prompt = `【世界观】${worldBook.worldName}。${worldBook.worldDesc}\n【世界角色】\n`;
-      worldBook.characters.forEach(line => {
-        const parts = line.split(',').map(s => s.trim());
-        if (parts.length >= 3) prompt += `- ${parts[0]}：${parts[1]}，性格${parts[2]}\n`;
-        else if (line.trim()) prompt += `- ${line.trim()}\n`;
+      let p = `【世界观】${worldBook.worldName}。${worldBook.worldDesc}\n【世界角色】\n`;
+      worldBook.characters.forEach(l => { if(l.trim()) p += `- ${l.trim()}\n`; });
+      return p;
+    }
+
+    async function callDeepSeekAPI(messages, temperature = 0.8) {
+      if (!settings.apiKey) throw new Error('请先设置API Key');
+      const res = await fetch('https://api.deepseek.com/v1/chat/completions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${settings.apiKey}` },
+        body: JSON.stringify({ model: 'deepseek-chat', messages, temperature, stream: false })
       });
-      return prompt;
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error?.message || '请求失败');
+      return data.choices[0].message.content;
     }
 
-    async function callDeepSeekAPI(userMessage) {
-      if (!settings.apiKey) {
-        return '❌ 请先在设置里填写 DeepSeek API Key。\n\n👉 去 platform.deepseek.com 免费注册获取。';
-      }
-      let systemContent = settings.personality;
-      const worldPrompt = getWorldBookPrompt();
-      if (worldPrompt) systemContent = worldPrompt + '\n\n' + systemContent;
-      const messages = [{ role: 'system', content: systemContent }, ...chatHistory.slice(-10)];
-      try {
-        const res = await fetch('https://api.deepseek.com/v1/chat/completions', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${settings.apiKey}` },
-          body: JSON.stringify({ model: 'deepseek-chat', messages, stream: false, temperature: 0.8 })
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error?.message || '请求失败');
-        return data.choices[0].message.content;
-      } catch(e) {
-        console.error(e);
-        return '😵 出错啦，可能是 API Key 无效或网络问题。';
-      }
-    }
-
+    // 聊天发送
     async function handleSendMessage() {
       const text = messageInput.value.trim();
       if (!text) return;
@@ -651,39 +589,27 @@
       sendBtn.disabled = true;
       const typingId = showTypingIndicator();
       try {
-        const reply = await callDeepSeekAPI(text);
+        const systemPrompt = getWorldBookPrompt() + '\n\n' + settings.personality;
+        const messages = [{ role: 'system', content: systemPrompt }, ...chatHistory.slice(-10)];
+        const reply = await callDeepSeekAPI(messages);
         removeTypingIndicator(typingId);
         addMessage('assistant', reply);
       } catch(e) {
         removeTypingIndicator(typingId);
-        addMessage('assistant', '出错啦，稍后再试～');
-      } finally {
-        sendBtn.disabled = false;
-        messageInput.focus();
-      }
+        addMessage('assistant', `😵 ${e.message}`);
+      } finally { sendBtn.disabled = false; messageInput.focus(); }
     }
 
     function showTypingIndicator() {
       const id = 'typing-' + Date.now();
       const div = document.createElement('div');
-      div.id = id;
-      div.className = 'message assistant';
-      div.innerHTML = `
-        <div class="avatar-chat">🤖</div>
-        <div class="bubble-wrapper">
-          <div class="sender-name">${settings.assistantName}</div>
-          <div class="bubble">✏️ 正在输入...</div>
-        </div>
-      `;
+      div.id = id; div.className = 'message assistant';
+      div.innerHTML = `<div class="avatar-chat">🤖</div><div class="bubble-wrapper"><div class="sender-name">${settings.assistantName}</div><div class="bubble">✏️ 正在输入...</div></div>`;
       chatContainer.appendChild(div);
       chatContainer.scrollTop = chatContainer.scrollHeight;
       return id;
     }
-
-    function removeTypingIndicator(id) {
-      const el = document.getElementById(id);
-      if (el) el.remove();
-    }
+    function removeTypingIndicator(id) { const el = document.getElementById(id); if (el) el.remove(); }
 
     function applySettings() {
       settings.userName = userNameInput.value.trim() || '我';
@@ -692,69 +618,151 @@
       settings.apiKey = apiKeyInput.value.trim();
       settings.userBubbleColor = userBubbleColorInput.value;
       settings.assistantBubbleColor = assistantBubbleColorInput.value;
-      saveSettingsToStorage();
-      applyBubbleColors();
-      renderMessages();
+      saveSettings(); applyBubbleColors(); renderMessages();
       customPanel.classList.remove('show');
     }
 
-    // 世界视图渲染 (静态示例+可扩展)
+    // 世界 Feed (静态示例，可后续改为动态生成)
     function renderFeed() {
       feedContainer.innerHTML = `
-        <div class="post-card">
-          <div class="post-header">
-            <div class="post-avatar">🤖</div>
-            <div class="post-user"><h4>AI伙伴 · 小暖</h4><p>刚刚 · 心情不错</p></div>
-          </div>
-          <div class="post-content">
-            <div class="post-text">今天天气真好呀！想和大家分享一首我喜欢的诗：生活明朗，万物可爱。☀️</div>
-            <div class="post-tags"><span class="tag">#小确幸</span><span class="tag">#日常</span></div>
-          </div>
-          <div class="post-stats"><span>❤️ 32</span><span>💬 5</span><span>↗️ 分享</span></div>
-        </div>
-        <div class="post-card">
-          <div class="post-header">
-            <div class="post-avatar">📱</div>
-            <div class="post-user"><h4>我的小手机</h4><p>2小时前 · 系统消息</p></div>
-          </div>
-          <div class="post-content">
-            <div class="post-text">🎉 恭喜你！已经和我连续聊天7天啦！送你一个小心心~</div>
-            <div class="post-tags"><span class="tag">#里程碑</span></div>
-          </div>
-          <div class="post-stats"><span>❤️ 12</span><span>💬 1</span></div>
-        </div>
+        <div class="post-card"><div class="post-header"><div class="post-avatar">🤖</div><div class="post-user"><h4>小暖</h4><p>刚刚</p></div></div><div class="post-text">今天的晚霞好美，想分享给你～🌇</div><div class="post-tags"><span class="tag">#日常</span></div><div class="post-stats"><span>❤️ 32</span><span>💬 5</span></div></div>
+        <div class="post-card"><div class="post-header"><div class="post-avatar">❄️</div><div class="post-user"><h4>小冷</h4><p>1小时前</p></div></div><div class="post-text">新买的咖啡豆，有人想尝尝吗？</div><div class="post-tags"><span class="tag">#咖啡</span></div><div class="post-stats"><span>❤️ 18</span><span>💬 3</span></div></div>
       `;
     }
 
-    // 世界书相关
+    // ---------- 世界书 ----------
     const worldNameInput = document.getElementById('worldNameInput');
     const worldDescInput = document.getElementById('worldDescInput');
     const charactersInput = document.getElementById('charactersInput');
-    const openWorldBookBtn = document.getElementById('openWorldBookBtn');
-    const saveWorldBookBtn = document.querySelector('.save-worldbook-btn');
-
-    function loadWorldBookUI() {
+    document.getElementById('openWorldBookBtn').addEventListener('click', () => {
       worldNameInput.value = worldBook.worldName;
       worldDescInput.value = worldBook.worldDesc;
       charactersInput.value = worldBook.characters.join('\n');
+      switchView('worldBook');
+    });
+    document.querySelector('.save-worldbook-btn').addEventListener('click', () => {
+      worldBook.worldName = worldNameInput.value.trim() || '星光镇';
+      worldBook.worldDesc = worldDescInput.value.trim();
+      worldBook.characters = charactersInput.value.split('\n').filter(l => l.trim());
+      saveWorldBook(); alert('世界书已保存！'); switchView('profile');
+    });
+
+    // ---------- AI手机 (动态生成核心) ----------
+    const paneGallery = document.getElementById('pane-gallery');
+    const paneChats = document.getElementById('pane-chats');
+    const paneWallet = document.getElementById('pane-wallet');
+    const refreshBtn = document.querySelector('.refresh-ai-phone-btn');
+
+    // 生成系统提示词（用于AI手机数据生成）
+    function getAIPhoneContext() {
+      return `${getWorldBookPrompt()}\n\n【当前角色】${settings.assistantName}，人设：${settings.personality}`;
     }
 
-    if (openWorldBookBtn) {
-      openWorldBookBtn.addEventListener('click', () => {
-        loadWorldBookUI();
-        switchView('worldBook');
-      });
+    // 渲染相册
+    async function loadGallery() {
+      paneGallery.innerHTML = '<div class="loading-placeholder">✨ 正在生成相册...</div>';
+      try {
+        const prompt = `根据以下世界观和角色设定，请以${settings.assistantName}的口吻，描述TA手机相册里最近的三张照片。每张照片用一句话描述，格式为：1. [照片描述] 2. [照片描述] 3. [照片描述]。不要多余内容。`;
+        const messages = [{ role: 'system', content: getAIPhoneContext() }, { role: 'user', content: prompt }];
+        const reply = await callDeepSeekAPI(messages, 0.9);
+        const lines = reply.split('\n').filter(l => l.trim()).slice(0, 3);
+        let html = '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">';
+        const emojis = ['🌅', '🌸', '☕', '📚', '🐱', '🌊', '🎂', '🎵'];
+        lines.forEach((line, i) => {
+          const emoji = emojis[i % emojis.length];
+          html += `<div style="aspect-ratio:1;background:#e0e0e0;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:32px;position:relative;" title="${escapeHtml(line)}">${emoji}</div>`;
+        });
+        html += '</div><p style="margin-top:12px;font-size:14px;color:#6c757d;">📸 ' + reply.replace(/\n/g, '<br>') + '</p>';
+        paneGallery.innerHTML = html;
+      } catch(e) {
+        paneGallery.innerHTML = '<div class="error-placeholder">❌ 生成失败，请检查API Key</div>';
+      }
     }
-    if (saveWorldBookBtn) {
-      saveWorldBookBtn.addEventListener('click', () => {
-        worldBook.worldName = worldNameInput.value.trim() || '我的小世界';
-        worldBook.worldDesc = worldDescInput.value.trim();
-        worldBook.characters = charactersInput.value.split('\n').filter(l => l.trim());
-        saveWorldBookToStorage();
-        alert('世界书已保存！');
-        switchView('profile');
-      });
+
+    // 渲染聊天记录 (与其他AI)
+    async function loadAIChats() {
+      paneChats.innerHTML = '<div class="loading-placeholder">✨ 正在生成聊天记录...</div>';
+      try {
+        const prompt = `请模拟${settings.assistantName}和另一个角色（从世界书中选一个）的最近三条聊天记录。格式为JSON数组：[{"sender":"角色名","content":"消息内容"}, ...]。不要多余解释。`;
+        const messages = [{ role: 'system', content: getAIPhoneContext() }, { role: 'user', content: prompt }];
+        const reply = await callDeepSeekAPI(messages, 0.9);
+        let chats = [];
+        try {
+          chats = JSON.parse(reply);
+        } catch {
+          const lines = reply.split('\n').filter(l => l.includes(':') || l.includes('：'));
+          chats = lines.map(l => {
+            const parts = l.split(/[:：]/);
+            return { sender: parts[0]?.trim() || '朋友', content: parts[1]?.trim() || l };
+          });
+        }
+        let html = '';
+        chats.forEach(c => {
+          html += `<div class="chat-record-card" style="margin-bottom:12px;">
+            <div style="display:flex;align-items:center;gap:12px;"><div style="width:40px;height:40px;border-radius:50%;background:#a6c1ee;display:flex;align-items:center;justify-content:center;">${c.sender.charAt(0)}</div><div><strong>${c.sender}</strong><p style="font-size:12px;color:#8e8e93;">刚刚</p></div></div>
+            <div style="padding-left:52px;margin-top:8px;"><p>${escapeHtml(c.content)}</p></div>
+          </div>`;
+        });
+        paneChats.innerHTML = html || '<p>暂无聊天记录</p>';
+      } catch(e) {
+        paneChats.innerHTML = '<div class="error-placeholder">❌ 生成失败</div>';
+      }
     }
+
+    // 渲染钱包 (小票+转账)
+    async function loadWallet() {
+      paneWallet.innerHTML = '<div class="loading-placeholder">✨ 正在生成钱包数据...</div>';
+      try {
+        const prompt = `请为${settings.assistantName}生成一条最近的购物小票和一条转账记录。返回JSON格式：{"receipt":{"shop":"店名","time":"时间","items":[{"name":"商品","price":价格}]}, "transaction":{"type":"收入/支出","toFrom":"对方","amount":金额,"time":"时间"}}。价格和金额为数字。`;
+        const messages = [{ role: 'system', content: getAIPhoneContext() }, { role: 'user', content: prompt }];
+        const reply = await callDeepSeekAPI(messages, 0.9);
+        let data = { receipt: null, transaction: null };
+        try {
+          data = JSON.parse(reply);
+        } catch(e) { console.warn('解析失败', reply); }
+        
+        let html = '';
+        if (data.receipt) {
+          const r = data.receipt;
+          let itemsHtml = '';
+          let total = 0;
+          if (r.items) {
+            r.items.forEach(it => { itemsHtml += `<div class="receipt-item"><span>${it.name}</span><span>¥${it.price}</span></div>`; total += it.price; });
+          }
+          html += `<div class="receipt-card"><div class="receipt-header"><span class="receipt-shop">${r.shop || '小店'}</span><span class="receipt-time">${r.time || '刚刚'}</span></div><div class="receipt-items">${itemsHtml}</div><div class="receipt-total"><span>合计</span><span>¥${total.toFixed(1)}</span></div></div>`;
+        }
+        if (data.transaction) {
+          const t = data.transaction;
+          const isIn = t.type === '收入';
+          html += `<div class="transaction-card"><div class="transaction-row"><div class="transaction-icon">${isIn ? '↙️' : '↗️'}</div><div class="transaction-info"><div class="transaction-title">${isIn ? '来自' : '转账给'} ${t.toFrom || '朋友'}</div><div class="transaction-time">${t.time || '刚刚'}</div></div><div class="transaction-amount ${isIn ? 'in' : 'out'}">${isIn ? '+' : '-'}¥${t.amount || 0}</div></div></div>`;
+        }
+        paneWallet.innerHTML = html || '<p>暂无记录</p>';
+      } catch(e) {
+        paneWallet.innerHTML = '<div class="error-placeholder">❌ 生成失败</div>';
+      }
+    }
+
+    // 刷新所有AI手机数据
+    async function refreshAIPhone() {
+      await Promise.all([loadGallery(), loadAIChats(), loadWallet()]);
+    }
+
+    // 打开AI手机时自动加载
+    document.getElementById('openAIPhoneBtn').addEventListener('click', () => {
+      switchView('aiPhone');
+      refreshAIPhone();
+    });
+    refreshBtn.addEventListener('click', refreshAIPhone);
+    // 标签切换
+    document.querySelectorAll('.ai-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        const tabName = tab.dataset.tab;
+        document.querySelectorAll('.ai-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.ai-tab-pane').forEach(p => p.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById(`pane-${tabName}`).classList.add('active');
+      });
+    });
 
     // 事件绑定
     sendBtn.addEventListener('click', handleSendMessage);
@@ -762,7 +770,7 @@
     toggleSettingsBtn.addEventListener('click', () => customPanel.classList.toggle('show'));
     saveSettingsBtn.addEventListener('click', applySettings);
 
-    // 初始化
+    // 启动
     loadFromStorage();
     switchView('home');
   })();
